@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AG Win - Spin & Win</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-bottom: 70px;
+        }
+
+        .vpn-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .vpn-popup-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 400px;
+            margin: 20px;
+        }
+
+        .vpn-popup-content h2 {
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+
+        .vpn-popup-content p {
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .coin-display {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+
+        .coin-icon {
+            width: 25px;
+            height: 25px;
+            background: gold;
+            border-radius: 50%;
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .coin-amount {
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .auth-container {
+            max-width: 400px;
+            margin: 50px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .auth-container h2 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .switch-auth {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+
+        .switch-auth a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container {
+            display: none;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .game-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 24px;
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .spin-wheel {
+            width: 300px;
+            height: 300px;
+            margin: 30px auto;
+            position: relative;
+            border-radius: 50%;
+            border: 10px solid #667eea;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+        }
+
+        .wheel-segment {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            transform-origin: 100% 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 18px;
+        }
+
+        .spin-button {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(245, 87, 108, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .spin-button:hover:not(:disabled) {
+            transform: scale(1.05);
+        }
+
+        .spin-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .scratch-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .scratch-card {
+            aspect-ratio: 1;
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .scratch-surface {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #333;
+            font-size: 18px;
+        }
+
+        .scratch-prize {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .watch-earn-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(56, 239, 125, 0.4);
+        }
+
+        .ad-container {
+            margin: 20px 0;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f5;
+            border-radius: 10px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #666;
+            cursor: pointer;
+            padding: 5px 15px;
+            transition: color 0.3s;
+        }
+
+        .nav-item.active {
+            color: #667eea;
+        }
+
+        .nav-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .profile-section, .history-section, .withdrawal-section, .refer-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .profile-info {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .profile-info label {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .history-item {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .refer-code-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .refer-code {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            letter-spacing: 2px;
+            margin: 10px 0;
+        }
+
+        .copy-btn {
+            padding: 10px 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            cursor: crosshair;
+        }
+
+        .limits-info {
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 14px;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="vpn-popup" id="vpnPopup">
+        <div class="vpn-popup-content">
+            <h2>⚠️ VPN/DNS Detected</h2>
+            <p><strong>कृपया अपना VPN या DNS बंद करें!</strong></p>
+            <p>यह ऐप VPN या DNS के साथ काम नहीं करता है। कृपया पहले अपना VPN/DNS डिसेबल करें, फिर ऐप को दोबारा खोलें।</p>
+            <p><strong>Why?</strong> हम ads के ज़रिये आपको मुफ्त coins देते हैं। VPN/DNS से ads block हो जाते हैं, इसलिए ऐप काम नहीं करता।</p>
+        </div>
+    </div>
+
+    <div class="header">
+        <div class="logo">AG Win</div>
+        <div class="coin-display" id="headerCoins">
+            <div class="coin-icon">₹</div>
+            <div class="coin-amount">0</div>
+        </div>
+    </div>
+
+    <!-- Login Form -->
+    <div class="auth-container" id="loginForm">
+        <h2>Login to AG Win</h2>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="loginEmail" placeholder="Enter your email">
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="loginPassword" placeholder="Enter your password">
+        </div>
+        <button class="btn" onclick="login()">Login</button>
+        <div class="switch-auth">
+            Don't have an account? <a href="#" onclick="showSignup()">Sign Up</a>
+        </div>
+    </div>
+
+    <!-- Signup Form -->
+    <div class="auth-container" id="signupForm" style="display: none;">
+        <h2>Sign Up for AG Win</h2>
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="signupName" placeholder="Enter your name">
+        </div>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="signupEmail" placeholder="Enter your email">
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="signupPassword" placeholder="Create a password">
+        </div>
+        <div class="form-group">
+            <label>Refer Code (Optional)</label>
+            <input type="text" id="referCode" placeholder="Enter refer code if you have">
+        </div>
+        <button class="btn" onclick="signup()">Sign Up</button>
+        <div class="switch-auth">
+            Already have an account? <a href="#" onclick="showLogin()">Login</a>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container" id="mainContainer">
+        <!-- Home Page -->
+        <div id="homePage">
+            <div class="game-section">
+                <h2 class="section-title">🎡 Spin & Win</h2>
+                <div class="limits-info" id="spinLimits">Daily Spin Limit: Loading...</div>
+                <div class="spin-wheel" id="spinWheel">
+                    <div class="wheel-segment" style="background: #e74c3c; transform: rotate(0deg) skewY(-60deg);"><span style="transform: skewY(60deg) rotate(30deg);">100</span></div>
+                    <div class="wheel-segment" style="background: #3498db; transform: rotate(60deg) skewY(-60deg);"><span style="transform: skewY(60deg) rotate(30deg);">50</span></div>
+                    <div class="wheel-segment" style="background: #2ecc71; transform: rotate(120deg) skewY(-60deg);"><span style="transform: skewY(60deg) rotate(30deg);">75</span></div>
+                    <div class="wheel-segment" style="background: #f39c12; transform: rotate(180deg) skewY(-60deg);"><span style="transform: skewY(60deg) rotate(30deg);">25</span></div>
+                    <div class="wheel-segment" style="background: #9b59b6; transform: rotate(240deg) skewY(-60deg);"><span style="transform: skewY(60deg) rotate(30deg);">10</span></div>
+                    <div class="wheel-segment" style="background: #1abc9c; transform: rotate(300deg) skewY(-60deg);"><span style="transform: skewY(60deg) rotate(30deg);">40</span></div>
+                </div>
+                <button class="spin-button" id="spinBtn" onclick="spinWheel()">SPIN NOW</button>
+            </div>
+
+            <div class="game-section">
+                <h2 class="section-title">🎫 Scratch Cards</h2>
+                <div class="limits-info" id="scratchLimits">Daily Scratch Limit: Loading...</div>
+                <div class="scratch-cards" id="scratchCards"></div>
+            </div>
+
+            <div class="game-section">
+                <h2 class="section-title">📺 Watch & Earn</h2>
+                <button class="watch-earn-btn" onclick="watchAd()">Watch Ad & Earn Coins</button>
+                <div id="watchAdContainer"></div>
+            </div>
+
+            <div class="ad-container">
+                <div id="container-911f947297caa9fff00a52fc8cafd189"></div>
+            </div>
+        </div>
+
+        <!-- Profile Page -->
+        <div id="profilePage" style="display: none;">
+            <div class="profile-section">
+                <h2 class="section-title">👤 My Profile</h2>
+                <div class="profile-info">
+                    <label>Name:</label>
+                    <div id="profileName">Loading...</div>
+                </div>
+                <div class="profile-info">
+                    <label>Email:</label>
+                    <div id="profileEmail">Loading...</div>
+                </div>
+                <div class="profile-info">
+                    <label>User ID:</label>
+                    <div id="profileUserId">Loading...</div>
+                </div>
+                <div class="profile-info">
+                    <label>Total Coins:</label>
+                    <div id="profileCoins">Loading...</div>
+                </div>
+                <div class="profile-info">
+                    <label>Total Withdrawals:</label>
+                    <div id="profileWithdrawals">Loading...</div>
+                </div>
+                <div class="profile-info">
+                    <label>Total Ads Watched:</label>
+                    <div id="profileAds">Loading...</div>
+                </div>
+                <button class="btn" onclick="logout()" style="margin-top: 20px;">Logout</button>
+            </div>
+        </div>
+
+        <!-- History Page -->
+        <div id="historyPage" style="display: none;">
+            <div class="history-section">
+                <h2 class="section-title">📜 History</h2>
+                <div id="historyList"></div>
+            </div>
+        </div>
+
+        <!-- Withdrawal Page -->
+        <div id="withdrawalPage" style="display: none;">
+            <div class="withdrawal-section">
+                <h2 class="section-title">💰 Withdrawal</h2>
+                <div class="limits-info" id="withdrawalLimits">Loading withdrawal settings...</div>
+                <div class="form-group">
+                    <label>Amount (in coins)</label>
+                    <input type="number" id="withdrawAmount" placeholder="Enter amount">
+                </div>
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <select id="paymentMethod" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px;">
+                        <option value="">Select method</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Account Details</label>
+                    <input type="text" id="accountDetails" placeholder="Enter your account details">
+                </div>
+                <button class="btn" onclick="requestWithdrawal()">Request Withdrawal</button>
+                <div id="withdrawalMessage"></div>
+            </div>
+        </div>
+
+        <!-- Refer & Earn Page -->
+        <div id="referPage" style="display: none;">
+            <div class="refer-section">
+                <h2 class="section-title">🎁 Refer & Earn</h2>
+                <p style="text-align: center; color: #666; margin-bottom: 20px;">
+                    Share your refer code and earn coins when your friends sign up!
+                </p>
+                <div class="refer-code-box">
+                    <div style="color: #666;">Your Refer Code</div>
+                    <div class="refer-code" id="userReferCode">Loading...</div>
+                    <button class="copy-btn" onclick="copyReferCode()">Copy Code</button>
+                </div>
+                <div class="profile-info">
+                    <label>Total Referrals:</label>
+                    <div id="totalReferrals">0</div>
+                </div>
+                <div class="profile-info">
+                    <label>Coins Earned from Referrals:</label>
+                    <div id="referralCoins">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav" id="bottomNav" style="display: none;">
+        <div class="nav-item active" onclick="showPage('home')">
+            <div class="nav-icon">🏠</div>
+            <div>Home</div>
+        </div>
+        <div class="nav-item" onclick="showPage('profile')">
+            <div class="nav-icon">👤</div>
+            <div>Profile</div>
+        </div>
+        <div class="nav-item" onclick="showPage('history')">
+            <div class="nav-icon">📜</div>
+            <div>History</div>
+        </div>
+        <div class="nav-item" onclick="showPage('withdrawal')">
+            <div class="nav-icon">💰</div>
+            <div>Withdrawal</div>
+        </div>
+        <div class="nav-item" onclick="showPage('refer')">
+            <div class="nav-icon">🎁</div>
+            <div>Refer</div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script async="async" data-cfasync="false" src="//pl27790122.revenuecpmgate.com/911f947297caa9fff00a52fc8cafd189/invoke.js"></script>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDtBY2J28NIVZHo86vq9JM3lFCgqVlGPWM",
+            authDomain: "ag-recharge-app.firebaseapp.com",
+            databaseURL: "https://ag-recharge-app-default-rtdb.firebaseio.com",
+            projectId: "ag-recharge-app",
+            storageBucket: "ag-recharge-app.firebasestorage.app",
+            messagingSenderId: "780644267955",
+            appId: "1:780644267955:web:bf9b7c66975afc47f4fdc6"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+
+        let currentUser = null;
+        let userData = {};
+        let appSettings = {};
+        let isSpinning = false;
+
+        // VPN/DNS Detection
+        function detectVPN() {
+            const vpnIndicators = [
+                navigator.doNotTrack === "1",
+                window.navigator.connection && window.navigator.connection.effectiveType === 'unknown'
+            ];
+            
+            if (vpnIndicators.some(indicator => indicator)) {
+                document.getElementById('vpnPopup').style.display = 'flex';
+                return true;
+            }
+            return false;
+        }
+
+        // Check authentication state
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                currentUser = user;
+                loadUserData();
+                showMainApp();
+            } else {
+                showLogin();
+            }
+        });
+
+        function showLogin() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('signupForm').style.display = 'none';
+            document.getElementById('mainContainer').style.display = 'none';
+            document.getElementById('bottomNav').style.display = 'none';
+        }
+
+        function showSignup() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('signupForm').style.display = 'block';
+            document.getElementById('mainContainer').style.display = 'none';
+            document.getElementById('bottomNav').style.display = 'none';
+        }
+
+        function showMainApp() {
+            if (detectVPN()) return;
+            
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('signupForm').style.display = 'none';
+            document.getElementById('mainContainer').style.display = 'block';
+            document.getElementById('bottomNav').style.display = 'flex';
+            loadAppSettings();
+            loadScratchCards();
+        }
+
+        async function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                alert('कृपया सभी fields भरें');
+                return;
+            }
+
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+            } catch (error) {
+                alert('Login failed: ' + error.message);
+            }
+        }
+
+        async function signup() {
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const referCode = document.getElementById('referCode').value;
+
+            if (!name || !email || !password) {
+                alert('कृपया सभी required fields भरें');
+                return;
+            }
+
+            try {
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+
+                // Generate refer code
+                const userReferCode = 'AG' + Math.random().toString(36).substr(2, 8).toUpperCase();
+
+                // Create user data
+                const newUserData = {
+                    name: name,
+                    email: email,
+                    userId: user.uid,
+                    coins: 0,
+                    referCode: userReferCode,
+                    referredBy: referCode || null,
+                    totalReferrals: 0,
+                    referralCoins: 0,
+                    totalWithdrawals: 0,
+                    totalAdsWatched: 0,
+                    spinsToday: 0,
+                    scratchesToday: 0,
+                    lastSpinDate: null,
+                    lastScratchDate: null,
+                    createdAt: new Date().toISOString()
+                };
+
+                await db.ref('users/' + user.uid).set(newUserData);
+
+                // Process referral bonus
+                if (referCode) {
+                    await processReferralBonus(referCode, user.uid);
+                }
+
+            } catch (error) {
+                alert('Signup failed: ' + error.message);
+            }
+        }
+
+        async function processReferralBonus(referCode, newUserId) {
+            try {
+                const usersSnapshot = await db.ref('users').once('value');
+                const users = usersSnapshot.val();
+                
+                for (let userId in users) {
+                    if (users[userId].referCode === referCode) {
+                        const settings = await db.ref('settings/referralBonus').once('value');
+                        const bonus = settings.val() || 50;
+                        
+                        await db.ref('users/' + userId).update({
+                            coins: (users[userId].coins || 0) + bonus,
+                            totalReferrals: (users[userId].totalReferrals || 0) + 1,
+                            referralCoins: (users[userId].referralCoins || 0) + bonus
+                        });
+
+                        await db.ref('users/' + userId + '/history').push({
+                            type: 'referral',
+                            amount: bonus,
+                            timestamp: new Date().toISOString()
+                        });
+                        break;
+                    }
+                }
+            } catch (error) {
+                console.error('Referral processing error:', error);
+            }
+        }
+
+        function logout() {
+            auth.signOut();
+        }
+
+        async function loadUserData() {
+            try {
+                const snapshot = await db.ref('users/' + currentUser.uid).once('value');
+                userData = snapshot.val() || {};
+                updateCoinDisplay();
+                updateProfileInfo();
+                loadHistory();
+            } catch (error) {
+                console.error('Error loading user data:', error);
+            }
+        }
+
+        async function loadAppSettings() {
+            try {
+                const snapshot = await db.ref('settings').once('value');
+                appSettings = snapshot.val() || {};
+                updateLimitsDisplay();
+                updatePaymentMethods();
+            } catch (error) {
+                console.error('Error loading settings:', error);
+            }
+        }
+
+        function updateCoinDisplay() {
+            const coinAmount = document.querySelectorAll('.coin-amount');
+            coinAmount.forEach(el => {
+                el.textContent = userData.coins || 0;
+            });
+        }
+
+        function updateLimitsDisplay() {
+            const today = new Date().toDateString();
+            const lastSpinDate = userData.lastSpinDate ? new Date(userData.lastSpinDate).toDateString() : null;
+            const lastScratchDate = userData.lastScratchDate ? new Date(userData.lastScratchDate).toDateString() : null;
+
+            const spinsUsed = (lastSpinDate === today) ? (userData.spinsToday || 0) : 0;
+            const scratchesUsed = (lastScratchDate === today) ? (userData.scratchesToday || 0) : 0;
+
+            const spinLimit = appSettings.spinLimit || 10;
+            const scratchLimit = appSettings.scratchLimit || 5;
+
+            document.getElementById('spinLimits').textContent = 
+                `Daily Spin Limit: ${spinsUsed}/${spinLimit} used`;
+            document.getElementById('scratchLimits').textContent = 
+                `Daily Scratch Limit: ${scratchesUsed}/${scratchLimit} used`;
+            
+            document.getElementById('spinBtn').disabled = spinsUsed >= spinLimit;
+        }
+
+        function updatePaymentMethods() {
+            const select = document.getElementById('paymentMethod');
+            select.innerHTML = '<option value="">Select method</option>';
+            
+            const methods = appSettings.paymentMethods || ['UPI', 'Bank Transfer', 'PayTM'];
+            methods.forEach(method => {
+                const option = document.createElement('option');
+                option.value = method;
+                option.textContent = method;
+                select.appendChild(option);
+            });
+
+            const minWithdraw = appSettings.minWithdrawal || 100;
+            document.getElementById('withdrawalLimits').textContent = 
+                `Minimum Withdrawal: ${minWithdraw} coins | Withdrawal Fee: ${appSettings.withdrawalFee || 0} coins`;
+        }
+
+        function updateProfileInfo() {
+            document.getElementById('profileName').textContent = userData.name || 'N/A';
+            document.getElementById('profileEmail').textContent = userData.email || 'N/A';
+            document.getElementById('profileUserId').textContent = userData.userId || 'N/A';
+            document.getElementById('profileCoins').textContent = userData.coins || 0;
+            document.getElementById('profileWithdrawals').textContent = userData.totalWithdrawals || 0;
+            document.getElementById('profileAds').textContent = userData.totalAdsWatched || 0;
+            document.getElementById('userReferCode').textContent = userData.referCode || 'N/A';
+            document.getElementById('totalReferrals').textContent = userData.totalReferrals || 0;
+            document.getElementById('referralCoins').textContent = userData.referralCoins || 0;
+        }
+
+        async function spinWheel() {
+            if (isSpinning) return;
+
+            const today = new Date().toDateString();
+            const lastSpinDate = userData.lastSpinDate ? new Date(userData.lastSpinDate).toDateString() : null;
+            const spinsUsed = (lastSpinDate === today) ? (userData.spinsToday || 0) : 0;
+            const spinLimit = appSettings.spinLimit || 10;
+
+            if (spinsUsed >= spinLimit) {
+                alert('आपकी आज की spin limit पूरी हो गई है!');
+                return;
+            }
+
+            isSpinning = true;
+            document.getElementById('spinBtn').disabled = true;
+
+            const wheel = document.getElementById('spinWheel');
+            const prizes = [100, 50, 75, 25, 10, 40];
+            const randomIndex = Math.floor(Math.random() * prizes.length);
+            const prize = prizes[randomIndex];
+            
+            const rotation = 360 * 5 + (randomIndex * 60);
+            wheel.style.transition = 'transform 4s cubic-bezier(0.25, 0.1, 0.25, 1)';
+            wheel.style.transform = `rotate(${rotation}deg)`;
+
+            setTimeout(async () => {
+                const newCoins = (userData.coins || 0) + prize;
+                const newSpinsToday = (lastSpinDate === today) ? spinsUsed + 1 : 1;
+
+                await db.ref('users/' + currentUser.uid).update({
+                    coins: newCoins,
+                    spinsToday: newSpinsToday,
+                    lastSpinDate: new Date().toISOString()
+                });
+
+                await db.ref('users/' + currentUser.uid + '/history').push({
+                    type: 'spin',
+                    amount: prize,
+                    timestamp: new Date().toISOString()
+                });
+
+                alert(`🎉 Congratulations! You won ${prize} coins!`);
+                
+                wheel.style.transition = 'none';
+                wheel.style.transform = 'rotate(0deg)';
+                
+                await loadUserData();
+                await loadAppSettings();
+                
+                isSpinning = false;
+            }, 4000);
+        }
+
+        function loadScratchCards() {
+            const container = document.getElementById('scratchCards');
+            container.innerHTML = '';
+
+            const today = new Date().toDateString();
+            const lastScratchDate = userData.lastScratchDate ? new Date(userData.lastScratchDate).toDateString() : null;
+            const scratchesUsed = (lastScratchDate === today) ? (userData.scratchesToday || 0) : 0;
+            const scratchLimit = appSettings.scratchLimit || 5;
+
+            const cardsToShow = Math.min(6, scratchLimit - scratchesUsed);
+
+            for (let i = 0; i < cardsToShow; i++) {
+                const card = document.createElement('div');
+                card.className = 'scratch-card';
+                
+                const prize = Math.floor(Math.random() * 91) + 10;
+                
+                const prizeDiv = document.createElement('div');
+                prizeDiv.className = 'scratch-prize';
+                prizeDiv.textContent = `${prize}`;
+                
+                const canvas = document.createElement('canvas');
+                canvas.width = 150;
+                canvas.height = 150;
+                const ctx = canvas.getContext('2d');
+                
+                const gradient = ctx.createLinearGradient(0, 0, 150, 150);
+                gradient.addColorStop(0, '#ffd700');
+                gradient.addColorStop(1, '#ffed4e');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, 150, 150);
+                
+                ctx.fillStyle = '#333';
+                ctx.font = 'bold 16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('SCRATCH', 75, 70);
+                ctx.fillText('HERE', 75, 90);
+                
+                let isScratching = false;
+                let scratchedArea = 0;
+
+                function scratch(e) {
+                    if (!isScratching) return;
+                    
+                    const rect = canvas.getBoundingClientRect();
+                    const x = (e.clientX || e.touches[0].clientX) - rect.left;
+                    const y = (e.clientY || e.touches[0].clientY) - rect.top;
+                    
+                    ctx.globalCompositeOperation = 'destination-out';
+                    ctx.beginPath();
+                    ctx.arc(x, y, 20, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    scratchedArea++;
+                    
+                    if (scratchedArea > 50) {
+                        canvas.style.display = 'none';
+                        revealPrize(prize);
+                    }
+                }
+
+                canvas.addEventListener('mousedown', () => isScratching = true);
+                canvas.addEventListener('mouseup', () => isScratching = false);
+                canvas.addEventListener('mousemove', scratch);
+                canvas.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    isScratching = true;
+                });
+                canvas.addEventListener('touchend', () => isScratching = false);
+                canvas.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                    scratch(e);
+                });
+
+                card.appendChild(prizeDiv);
+                card.appendChild(canvas);
+                container.appendChild(card);
+            }
+        }
+
+        async function revealPrize(prize) {
+            const today = new Date().toDateString();
+            const lastScratchDate = userData.lastScratchDate ? new Date(userData.lastScratchDate).toDateString() : null;
+            const scratchesUsed = (lastScratchDate === today) ? (userData.scratchesToday || 0) : 0;
+
+            const newCoins = (userData.coins || 0) + prize;
+            const newScratchesToday = (lastScratchDate === today) ? scratchesUsed + 1 : 1;
+
+            await db.ref('users/' + currentUser.uid).update({
+                coins: newCoins,
+                scratchesToday: newScratchesToday,
+                lastScratchDate: new Date().toISOString()
+            });
+
+            await db.ref('users/' + currentUser.uid + '/history').push({
+                type: 'scratch',
+                amount: prize,
+                timestamp: new Date().toISOString()
+            });
+
+            alert(`🎉 You won ${prize} coins!`);
+            await loadUserData();
+            loadScratchCards();
+        }
+
+        async function watchAd() {
+            const adContainer = document.getElementById('watchAdContainer');
+            
+            // Load ad using settings
+            const adCode = appSettings.adCode || '27689623';
+            adContainer.innerHTML = `<div id="container-${adCode}"></div>`;
+            
+            // Simulate ad loading
+            const script = document.createElement('script');
+            script.src = `//pl27790122.revenuecpmgate.com/${adCode}/invoke.js`;
+            script.async = true;
+            script.onload = async () => {
+                // Wait for ad to complete (simulate)
+                setTimeout(async () => {
+                    const adReward = appSettings.adReward || 5;
+                    const newCoins = (userData.coins || 0) + adReward;
+                    const newAdsWatched = (userData.totalAdsWatched || 0) + 1;
+
+                    await db.ref('users/' + currentUser.uid).update({
+                        coins: newCoins,
+                        totalAdsWatched: newAdsWatched
+                    });
+
+                    await db.ref('users/' + currentUser.uid + '/history').push({
+                        type: 'ad',
+                        amount: adReward,
+                        timestamp: new Date().toISOString()
+                    });
+
+                    alert(`✅ Ad watched! You earned ${adReward} coins!`);
+                    await loadUserData();
+                    adContainer.innerHTML = '';
+                }, 3000);
+            };
+            document.body.appendChild(script);
+        }
+
+        async function requestWithdrawal() {
+            const amount = parseInt(document.getElementById('withdrawAmount').value);
+            const method = document.getElementById('paymentMethod').value;
+            const accountDetails = document.getElementById('accountDetails').value;
+            const messageDiv = document.getElementById('withdrawalMessage');
+
+            if (!amount || !method || !accountDetails) {
+                messageDiv.innerHTML = '<div class="message error">कृपया सभी fields भरें</div>';
+                return;
+            }
+
+            const minWithdrawal = appSettings.minWithdrawal || 100;
+            const withdrawalFee = appSettings.withdrawalFee || 0;
+            const totalDeduction = amount + withdrawalFee;
+
+            if (amount < minWithdrawal) {
+                messageDiv.innerHTML = `<div class="message error">Minimum withdrawal amount is ${minWithdrawal} coins</div>`;
+                return;
+            }
+
+            if (totalDeduction > (userData.coins || 0)) {
+                messageDiv.innerHTML = '<div class="message error">Insufficient coins</div>';
+                return;
+            }
+
+            try {
+                const newCoins = (userData.coins || 0) - totalDeduction;
+                const newWithdrawals = (userData.totalWithdrawals || 0) + 1;
+
+                await db.ref('users/' + currentUser.uid).update({
+                    coins: newCoins,
+                    totalWithdrawals: newWithdrawals
+                });
+
+                await db.ref('withdrawals').push({
+                    userId: currentUser.uid,
+                    userName: userData.name,
+                    amount: amount,
+                    fee: withdrawalFee,
+                    method: method,
+                    accountDetails: accountDetails,
+                    status: 'pending',
+                    timestamp: new Date().toISOString()
+                });
+
+                await db.ref('users/' + currentUser.uid + '/history').push({
+                    type: 'withdrawal',
+                    amount: -totalDeduction,
+                    timestamp: new Date().toISOString()
+                });
+
+                messageDiv.innerHTML = '<div class="message success">✅ Withdrawal request submitted successfully!</div>';
+                document.getElementById('withdrawAmount').value = '';
+                document.getElementById('accountDetails').value = '';
+                await loadUserData();
+            } catch (error) {
+                messageDiv.innerHTML = '<div class="message error">Error: ' + error.message + '</div>';
+            }
+        }
+
+        async function loadHistory() {
+            try {
+                const snapshot = await db.ref('users/' + currentUser.uid + '/history').limitToLast(20).once('value');
+                const history = snapshot.val();
+                const historyDiv = document.getElementById('historyList');
+                
+                if (!history) {
+                    historyDiv.innerHTML = '<div class="message info">No history yet</div>';
+                    return;
+                }
+
+                let html = '';
+                const historyArray = Object.values(history).reverse();
+                
+                historyArray.forEach(item => {
+                    const date = new Date(item.timestamp).toLocaleString();
+                    const emoji = item.type === 'spin' ? '🎡' : 
+                                 item.type === 'scratch' ? '🎫' : 
+                                 item.type === 'ad' ? '📺' : 
+                                 item.type === 'withdrawal' ? '💰' : '🎁';
+                    
+                    html += `
+                        <div class="history-item">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong>${emoji} ${item.type.toUpperCase()}</strong>
+                                    <div style="font-size: 12px; color: #666;">${date}</div>
+                                </div>
+                                <div style="font-size: 18px; font-weight: bold; color: ${item.amount > 0 ? '#2ecc71' : '#e74c3c'};">
+                                    ${item.amount > 0 ? '+' : ''}${item.amount} coins
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                historyDiv.innerHTML = html;
+            } catch (error) {
+                console.error('Error loading history:', error);
+            }
+        }
+
+        function copyReferCode() {
+            const code = document.getElementById('userReferCode').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Refer code copied: ' + code);
+            });
+        }
+
+        function showPage(page) {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            event.target.closest('.nav-item').classList.add('active');
+
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('profilePage').style.display = 'none';
+            document.getElementById('historyPage').style.display = 'none';
+            document.getElementById('withdrawalPage').style.display = 'none';
+            document.getElementById('referPage').style.display = 'none';
+
+            document.getElementById(page + 'Page').style.display = 'block';
+
+            if (page === 'history') {
+                loadHistory();
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            detectVPN();
+        });
+    </script>
+</body>
+</html>
